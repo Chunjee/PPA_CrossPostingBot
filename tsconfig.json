@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es5"
+    },
+    "files": [
+        "./classes/Tweet.ts",
+        "app.ts"
+    ]
+}

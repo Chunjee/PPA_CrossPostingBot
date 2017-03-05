@@ -1,0 +1,24 @@
+{
+  "name": "crosspostingbot",
+  "version": "0.0.1",
+  "description": "a bot for reposting tweets to reddit",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chunjee/PPA_CrossPostingBot"
+  },
+  "dependencies": {
+    "archive.is": "0.0.2",
+    "moment": "^2.14.1",
+    "snoowrap": "^1.3.0"
+  },
+  "author": "Chunjee",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/colors": "^1.1.1",
+    "@types/node": "^7.0.5"
+  }
+}
