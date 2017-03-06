@@ -108,7 +108,7 @@ console.log(moment().format('h:mm a') + ' SCRIPT STARTED'.rainbow);
 var TryPost 	= setInterval(function(){ PostToReddit() }, 10*1000); //every 10 seconds, try to post any qued posts
 var TryComment 	= setInterval(function(){ TryToComment() }, 10*1000); //every 10 seconds, try to comment
 var CanPost 	= setInterval(function(){ scriptstatus.canpost = true }, 11*60*1000); //every 11 mins, reload status.canpost to true so TryPost can succeed
-var HeartBeat 	= setInterval(function(){ console.log(moment().format('h:mm a') + " ~ Still running".green)}, 30*60*1000); //HeartBeat every .5 hour
+var HeartBeat 	= setInterval(function(){ console.log(moment().format('h:mm a ') + ' ~ Still running'.green)}, 30*60*1000); //HeartBeat every .5 hour
 
 
 //create twitter listening stream
@@ -124,12 +124,12 @@ t.on('data', function(data:any) {
 	if (data.user.id == scriptconfig.twitterid) {
 		var newtweet:any = new Tweet(data);
 		
-		if (!fn_InStr(data.text,"RT") || newtweet._text.legth > 10) { //do not post ReTweets or super short tweets
-			console.log(moment().format('h:mm a ') + (newtweet._username + " said: " + newtweet._text).green);
+		if (!fn_InStr(data.text,'RT') || newtweet._text.legth > 10) { //do not post ReTweets or super short tweets
+			console.log(moment().format('h:mm a ') + (newtweet._username + ' said: ' + newtweet._text).green);
 			tweets_array.push(newtweet);
-			console.log("added to que".green);
+			console.log('added to que'.green);
 		} else {
-			console.log(moment().format('h:mm a ') + (newtweet._username + " said: " + newtweet._originaltext).yellow);
+			console.log(moment().format('h:mm a ') + (newtweet._username + ' said: ' + newtweet._originaltext).yellow);
 		}
 	}
 });
@@ -137,7 +137,7 @@ t.on('data', function(data:any) {
 
 //connected
 t.on('connected', function(){
-	console.log(moment().format('h:mm a') + ' Stream created'.green);
+	console.log(moment().format('h:mm a ') + 'Stream created'.green);
 });
 //heartbeats
 t.on('heartbeat', function(){
@@ -150,14 +150,14 @@ t.on('garbage', function(data){
 });
 //connection errors (request || response)
 t.on('error', function(error){
-	console.log(moment().format('h:mm a') + ' Connection error:'.yellow);
+	console.log(moment().format('h:mm a ') + 'Connection error:'.yellow);
     console.log(error);
 });
 //close event (try to reconnect)
 t.on('close', function(error){
-	console.log(moment().format('h:mm a') + ' Stream closed:'.red);
+	console.log(moment().format('h:mm a ') + 'Stream closed:'.red);
     console.log(error);
-	console.log(moment().format('h:mm a') + ' Attempting reconnect'.yellow);
+	console.log(moment().format('h:mm a ') + 'Attempting reconnect'.yellow);
 	t.stream(params);
 });
 
@@ -185,7 +185,7 @@ function Sb_SubmitLink(para_post, para_url) {
 	//console.log(para_post + " , " + para_url);
 	if (para_url) {
 		r.getSubreddit(scriptconfig.subreddit).submitLink({title: 'Twitter: "' + para_post + '"', url: para_url }).then(function(submition){
-			console.log(moment().format('h:mm a') + ("POSTED: " + submition.name).green);
+			console.log(moment().format('h:mm a ') + ('POSTED: ' + submition.name).green);
 			//posted_array.push(submition.name);
 			fs.appendFileSync(process.cwd() + '/repliedIDs.dat', submition.name + "`n");
 		});
@@ -202,7 +202,7 @@ function TryToComment() {
 		var musiclink = link_array[Math.floor(Math.random() * link_array.length)];
 		var replytext = responses_array[Math.floor(Math.random() * responses_array.length)];
 		replytext = '[' + fn_addMusic(3) + " " + replytext + " " + fn_addMusic(3) + '](' + musiclink + ')';
-		console.log(moment().format('h:mm a') + (' Commenting with: ' + replytext).green);
+		console.log(moment().format('h:mm a ') + ('Commenting with: ' + replytext).green);
 		var post = posted_array.shift();
 		r.getSubmission(post).reply(replytext);
 		scriptstatus.canpost = false;
