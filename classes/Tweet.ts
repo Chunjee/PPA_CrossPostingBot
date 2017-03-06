@@ -3,14 +3,18 @@ class Tweet {
 
     public _text:string;
     public _permalink:string;
+    public _username:string;
     public _tweetobject:any;
+
+    public _originaltext:string;
 
 	//Constructor
     constructor(obj) {
         Tweet.numberoftweets++;
-
+        this._originaltext = obj.text;
         this._text = obj.text.replace(/(?:https?|ftp):\/\/[\n\S]+/gi, '');
         this._permalink = "https://twitter.com/dsmart/status/" + obj.id_str;
+        this._username = obj.user.name
 		this._tweetobject = obj;
 
 		//write it to file so we have some to inspect

@@ -124,12 +124,12 @@ t.on('data', function(data:any) {
 	if (data.user.id == scriptconfig.twitterid) {
 		var newtweet:any = new Tweet(data);
 		
-		if (!fn_InStr(data.text,"RT")) { //do not post ReTweets
-			console.log(moment().format('h:mm a') + (" derek said: " + newtweet._text).green);
+		if (!fn_InStr(data.text,"RT") || newtweet._text.legth > 10) { //do not post ReTweets or super short tweets
+			console.log(moment().format('h:mm a ') + (newtweet._username + " said: " + newtweet._text).green);
 			tweets_array.push(newtweet);
 			console.log("added to que".green);
 		} else {
-			console.log(moment().format('h:mm a') + (" derek said: " + newtweet._text).yellow);
+			console.log(moment().format('h:mm a ') + (newtweet._username + " said: " + newtweet._originaltext).yellow);
 		}
 	}
 });
@@ -169,7 +169,7 @@ var PostToReddit = function() {
 	if (tweets_array.length !== 0 && scriptstatus.canpost == true) {
 		var thistweet:any = tweets_array.shift();
 		archive.save(thistweet._permalink.toString()).then(function(archiveresult){
-			if (archiveresult.shortUrl && archiveresult.alreadyExists !== true && thistweet._text.legth > 10) {
+			if (archiveresult.shortUrl && archiveresult.alreadyExists !== true) {
 				Sb_SubmitLink(thistweet._text, archiveresult.shortUrl);
 				scriptstatus.canpost = false;
 				CanPost = setInterval(function(){ scriptstatus.canpost = true }, 11*60*1000);
@@ -186,7 +186,7 @@ function Sb_SubmitLink(para_post, para_url) {
 	if (para_url) {
 		r.getSubreddit(scriptconfig.subreddit).submitLink({title: 'Twitter: "' + para_post + '"', url: para_url }).then(function(submition){
 			console.log(moment().format('h:mm a') + ("POSTED: " + submition.name).green);
-			posted_array.push(submition.name);
+			//posted_array.push(submition.name);
 			fs.appendFileSync(process.cwd() + '/repliedIDs.dat', submition.name + "`n");
 		});
 	}
