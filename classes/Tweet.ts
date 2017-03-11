@@ -13,6 +13,7 @@ class Tweet {
         Tweet.numberoftweets++;
         this._originaltext = obj.text;
         this._text = obj.text.replace(/(?:https?|ftp):\/\/[\n\S]+/gi, '');
+        this._text = this._text.trim();
         this._permalink = "https://twitter.com/dsmart/status/" + obj.id_str;
         this._username = obj.user.name
 		this._tweetobject = obj;

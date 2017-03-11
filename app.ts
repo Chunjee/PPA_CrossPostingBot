@@ -107,7 +107,6 @@ console.log(moment().format('h:mm a') + ' SCRIPT STARTED'.rainbow);
 
 var TryPost 	= setInterval(function(){ PostToReddit() }, 10*1000); //every 10 seconds, try to post any qued posts
 var TryComment 	= setInterval(function(){ TryToComment() }, 10*1000); //every 10 seconds, try to comment
-var CanPost 	= setInterval(function(){ scriptstatus.canpost = true }, 11*60*1000); //every 11 mins, reload status.canpost to true so TryPost can succeed
 var HeartBeat 	= setInterval(function(){ console.log(moment().format('h:mm a ') + ' ~ Still running'.green)}, 30*60*1000); //HeartBeat every .5 hour
 
 
@@ -124,10 +123,9 @@ t.on('data', function(data:any) {
 	if (data.user.id == scriptconfig.twitterid) {
 		var newtweet:any = new Tweet(data);
 		
-		if (!fn_InStr(data.text,'RT') || newtweet._text.legth > 10) { //do not post ReTweets or super short tweets
-			console.log(moment().format('h:mm a ') + (newtweet._username + ' said: ' + newtweet._text).green);
+		if (!fn_InStr(data.text,'RT') && newtweet._text.length > 20) { //do not post ReTweets or super short tweets
+			console.log(moment().format('h:mm a ') + (newtweet._username + ' said: "' + newtweet._text + '" added to que').green);
 			tweets_array.push(newtweet);
-			console.log('added to que'.green);
 		} else {
 			console.log(moment().format('h:mm a ') + (newtweet._username + ' said: ' + newtweet._originaltext).yellow);
 		}
@@ -185,7 +183,7 @@ function Sb_SubmitLink(para_post, para_url) {
 	//console.log(para_post + " , " + para_url);
 	if (para_url) {
 		r.getSubreddit(scriptconfig.subreddit).submitLink({title: 'Twitter: "' + para_post + '"', url: para_url }).then(function(submition){
-			console.log(moment().format('h:mm a ') + ('POSTED: ' + submition.name).green);
+			console.log(moment().format('h:mm a ') + ('POSTED: ' + submition.name).green + (' ' + para_post).cyan);
 			//posted_array.push(submition.name);
 			fs.appendFileSync(process.cwd() + '/repliedIDs.dat', submition.name + "`n");
 		});
